@@ -8,6 +8,9 @@ import com.geraldosaidina.banking_app.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class AccountServiceImpl implements AccountService {
 
@@ -61,5 +64,22 @@ public class AccountServiceImpl implements AccountService {
         return AccountMapper.maptoAccountDTO(savedAccount);
 
 
+    }
+
+    @Override
+    public List<AccountDTO> getAllAccounts() {
+        List <Account> accounts = accountRepository.findAll();
+        return accounts.stream().map((account) -> AccountMapper.maptoAccountDTO(account))
+                .collect(Collectors.toList());
+
+    }
+
+    @Override
+    public void deleteAccount(Long id) {
+        Account account = accountRepository
+                .findById(id)
+                .orElseThrow(() -> new RuntimeException("Account not found"));
+
+        accountRepository.deleteById(id);
     }
 }

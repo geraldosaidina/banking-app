@@ -6,10 +6,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/v1/account")
+@RequestMapping("/api/v1/accounts")
 public class AccountController {
 
     private AccountService accountService;
@@ -41,5 +42,17 @@ public class AccountController {
         Double amount = request.get("amount");
         AccountDTO accountDTO = accountService.withdraw(id, request.get("amount"));
         return new ResponseEntity<>(accountDTO, HttpStatus.OK);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<AccountDTO>> getAllAccounts(){
+        List<AccountDTO> accounts = accountService.getAllAccounts();
+        return new ResponseEntity<>(accounts, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteAccount(@PathVariable Long id){
+        accountService.deleteAccount(id);
+        return new ResponseEntity<>("Account deleted successfully", HttpStatus.OK);
     }
 }
